@@ -2,7 +2,7 @@
 
 A web application that allows product marketers and developers to preview what their Atlassian Marketplace listing will look like before submission.
 
-![Atlassian Marketplace Preview Builder](https://via.placeholder.com/800x400?text=Atlassian+Marketplace+Preview+Builder)
+Based on the rules provided by Atlassian in this [web page](https://developer.atlassian.com/platform/marketplace/building-your-presence-on-marketplace/).
 
 ## Features
 
