@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/AtlassianMPACBuilder/static/css/main.6c5893b0.css",
-    "main.js": "/AtlassianMPACBuilder/static/js/main.6911c31d.js",
+    "main.js": "/AtlassianMPACBuilder/static/js/main.02043954.js",
     "static/js/977.50d2d7bf.chunk.js": "/AtlassianMPACBuilder/static/js/977.50d2d7bf.chunk.js",
     "static/js/732.548f36b8.chunk.js": "/AtlassianMPACBuilder/static/js/732.548f36b8.chunk.js",
     "index.html": "/AtlassianMPACBuilder/index.html",
     "main.6c5893b0.css.map": "/AtlassianMPACBuilder/static/css/main.6c5893b0.css.map",
-    "main.6911c31d.js.map": "/AtlassianMPACBuilder/static/js/main.6911c31d.js.map",
+    "main.02043954.js.map": "/AtlassianMPACBuilder/static/js/main.02043954.js.map",
     "732.548f36b8.chunk.js.map": "/AtlassianMPACBuilder/static/js/732.548f36b8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6c5893b0.css",
-    "static/js/main.6911c31d.js"
+    "static/js/main.02043954.js"
   ]
 }
