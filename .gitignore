@@ -16,6 +16,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.env*local*
+
+# Sensitive files
+docs/env-config.js
 
 npm-debug.log*
 yarn-debug.log*
