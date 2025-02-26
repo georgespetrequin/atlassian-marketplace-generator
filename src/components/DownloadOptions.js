@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import html2pdf from 'html2pdf.js';
 import { saveAs } from 'file-saver';
@@ -99,6 +99,35 @@ const LoadingContent = styled.div`
 
 const DownloadOptions = ({ previewRef, formData }) => {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  
+  // Add debugging useEffect
+  useEffect(() => {
+    console.log('DownloadOptions component mounted');
+    
+    // Check if we're on the live site
+    const isLiveSite = window.location.hostname.includes('github.io');
+    console.log('Is live site:', isLiveSite);
+    
+    // Log the styles of the download container after mounting
+    setTimeout(() => {
+      const container = document.querySelector('.download-options-container');
+      const buttons = document.querySelectorAll('.download-button');
+      
+      if (container) {
+        console.log('Download container found:', container);
+        console.log('Container computed style:', window.getComputedStyle(container));
+      } else {
+        console.error('Download container not found in DOM');
+      }
+      
+      if (buttons && buttons.length > 0) {
+        console.log('Download buttons found:', buttons.length);
+        console.log('First button computed style:', window.getComputedStyle(buttons[0]));
+      } else {
+        console.error('Download buttons not found in DOM');
+      }
+    }, 1000);
+  }, []);
   
   // Function to download as PDF
   const downloadAsPDF = () => {
@@ -330,31 +359,134 @@ const DownloadOptions = ({ previewRef, formData }) => {
     XLSX.writeFile(wb, filename);
   };
   
+  // Use regular HTML elements instead of styled components for the live site
   return (
     <>
-      <DownloadContainer className="download-options-container">
-        <DownloadTitle>Download Preview</DownloadTitle>
-        <DownloadButtons className="download-buttons-container">
-          <DownloadButton onClick={downloadAsPDF} disabled={isGeneratingPDF} className="download-button pdf-button">
-            <svg viewBox="0 0 24 24" fill="currentColor">
+      {/* Use regular HTML with inline styles instead of styled components */}
+      <div 
+        className="download-options-container"
+        style={{
+          padding: '16px 20px',
+          borderTop: '1px solid #DFE1E6',
+          backgroundColor: '#FAFBFC',
+          display: 'block'
+        }}
+      >
+        <h3 
+          style={{
+            fontSize: '16px',
+            marginBottom: '12px',
+            color: '#172B4D',
+            fontWeight: 500
+          }}
+        >
+          Download Preview
+        </h3>
+        <div 
+          className="download-buttons-container"
+          style={{
+            display: 'flex',
+            gap: '12px',
+            visibility: 'visible'
+          }}
+        >
+          <button 
+            onClick={downloadAsPDF} 
+            disabled={isGeneratingPDF}
+            className="download-button pdf-button"
+            style={{
+              backgroundColor: 'white',
+              color: '#0052CC',
+              border: '1px solid #DFE1E6',
+              borderRadius: '3px',
+              padding: '8px 16px',
+              fontSize: '14px',
+              fontWeight: 500,
+              cursor: isGeneratingPDF ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'background-color 0.2s',
+              opacity: isGeneratingPDF ? 0.6 : 1
+            }}
+          >
+            <svg 
+              viewBox="0 0 24 24" 
+              fill="currentColor"
+              style={{
+                width: '16px',
+                height: '16px',
+                display: 'inline-block'
+              }}
+            >
               <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
             </svg>
             PDF
-          </DownloadButton>
-          <DownloadButton onClick={downloadAsText} className="download-button text-button">
-            <svg viewBox="0 0 24 24" fill="currentColor">
+          </button>
+          <button 
+            onClick={downloadAsText}
+            className="download-button text-button"
+            style={{
+              backgroundColor: 'white',
+              color: '#0052CC',
+              border: '1px solid #DFE1E6',
+              borderRadius: '3px',
+              padding: '8px 16px',
+              fontSize: '14px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'background-color 0.2s'
+            }}
+          >
+            <svg 
+              viewBox="0 0 24 24" 
+              fill="currentColor"
+              style={{
+                width: '16px',
+                height: '16px',
+                display: 'inline-block'
+              }}
+            >
               <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
             </svg>
             Text
-          </DownloadButton>
-          <DownloadButton onClick={downloadAsSpreadsheet} className="download-button spreadsheet-button">
-            <svg viewBox="0 0 24 24" fill="currentColor">
+          </button>
+          <button 
+            onClick={downloadAsSpreadsheet}
+            className="download-button spreadsheet-button"
+            style={{
+              backgroundColor: 'white',
+              color: '#0052CC',
+              border: '1px solid #DFE1E6',
+              borderRadius: '3px',
+              padding: '8px 16px',
+              fontSize: '14px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'background-color 0.2s'
+            }}
+          >
+            <svg 
+              viewBox="0 0 24 24" 
+              fill="currentColor"
+              style={{
+                width: '16px',
+                height: '16px',
+                display: 'inline-block'
+              }}
+            >
               <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1.99 6H7V7h10.01v2zm0 4H7v-2h10.01v2zm-3 4H7v-2h7.01v2z"/>
             </svg>
             Spreadsheet
-          </DownloadButton>
-        </DownloadButtons>
-      </DownloadContainer>
+          </button>
+        </div>
+      </div>
       
       {isGeneratingPDF && (
         <LoadingOverlay>

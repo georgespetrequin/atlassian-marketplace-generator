@@ -587,6 +587,138 @@ const MarketplacePreview = ({ formData }) => {
   const youtubeVideoId = getYouTubeVideoId(formData.appYouTubeUrl);
   const youtubeThumbnailUrl = getYouTubeThumbnailUrl(youtubeVideoId);
   
+  // Add this at the end of the file, just before the final return statement
+  const renderFallbackDownloadButtons = (previewRef, formData) => {
+    return (
+      <div 
+        className="download-options-container fallback"
+        style={{
+          padding: '16px 20px',
+          borderTop: '1px solid #DFE1E6',
+          backgroundColor: '#FAFBFC',
+          display: 'block'
+        }}
+      >
+        <h3 
+          style={{
+            fontSize: '16px',
+            marginBottom: '12px',
+            color: '#172B4D',
+            fontWeight: 500
+          }}
+        >
+          Download Preview
+        </h3>
+        <div 
+          className="download-buttons-container"
+          style={{
+            display: 'flex',
+            gap: '12px',
+            visibility: 'visible'
+          }}
+        >
+          <button 
+            onClick={() => {
+              console.log('PDF download clicked (fallback)');
+              // Basic PDF download functionality
+              if (previewRef.current) {
+                const element = previewRef.current;
+                const filename = `${formData.appName || 'Marketplace-Preview'}.pdf`;
+                
+                import('html2pdf.js').then(html2pdfModule => {
+                  const html2pdf = html2pdfModule.default;
+                  html2pdf()
+                    .set({
+                      margin: [15, 15, 20, 15],
+                      filename: filename,
+                      image: { type: 'jpeg', quality: 0.98 },
+                      html2canvas: { scale: 2, useCORS: true },
+                      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    })
+                    .from(element)
+                    .save();
+                });
+              }
+            }}
+            className="download-button pdf-button fallback"
+            style={{
+              backgroundColor: 'white',
+              color: '#0052CC',
+              border: '1px solid #DFE1E6',
+              borderRadius: '3px',
+              padding: '8px 16px',
+              fontSize: '14px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'background-color 0.2s'
+            }}
+          >
+            <svg 
+              viewBox="0 0 24 24" 
+              fill="currentColor"
+              style={{
+                width: '16px',
+                height: '16px',
+                display: 'inline-block'
+              }}
+            >
+              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+            </svg>
+            PDF
+          </button>
+          <button 
+            onClick={() => {
+              console.log('Text download clicked (fallback)');
+              // Basic text download functionality
+              if (previewRef.current) {
+                const filename = `${formData.appName || 'Marketplace-Preview'}.txt`;
+                let content = `App Name: ${formData.appName || 'Not specified'}\n`;
+                content += `Tagline: ${formData.appTagline || 'Not specified'}\n`;
+                content += `Company: ${formData.companyName || 'Not specified'}\n`;
+                
+                import('file-saver').then(FileSaver => {
+                  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                  FileSaver.saveAs(blob, filename);
+                });
+              }
+            }}
+            className="download-button text-button fallback"
+            style={{
+              backgroundColor: 'white',
+              color: '#0052CC',
+              border: '1px solid #DFE1E6',
+              borderRadius: '3px',
+              padding: '8px 16px',
+              fontSize: '14px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'background-color 0.2s'
+            }}
+          >
+            <svg 
+              viewBox="0 0 24 24" 
+              fill="currentColor"
+              style={{
+                width: '16px',
+                height: '16px',
+                display: 'inline-block'
+              }}
+            >
+              <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+            Text
+          </button>
+        </div>
+      </div>
+    );
+  };
+  
   return (
     <PreviewContainer>
       <PreviewTitle>Marketplace Preview</PreviewTitle>
@@ -839,7 +971,27 @@ const MarketplacePreview = ({ formData }) => {
         )}
       </div>
       
-      {hasBasicInfo && <DownloadOptions previewRef={previewContentRef} formData={formData} />}
+      {hasBasicInfo && (
+        <>
+          <DownloadOptions previewRef={previewContentRef} formData={formData} />
+          {/* Add fallback buttons with a delay to ensure they're rendered if the main ones aren't */}
+          <div id="fallback-download-container" style={{ display: 'none' }}>
+            {renderFallbackDownloadButtons(previewContentRef, formData)}
+          </div>
+          <script dangerouslySetInnerHTML={{
+            __html: `
+              setTimeout(() => {
+                const mainButtons = document.querySelector('.download-buttons-container:not(.fallback)');
+                const fallbackContainer = document.getElementById('fallback-download-container');
+                if (!mainButtons || mainButtons.offsetHeight === 0) {
+                  console.log('Main download buttons not visible, showing fallback');
+                  if (fallbackContainer) fallbackContainer.style.display = 'block';
+                }
+              }, 2000);
+            `
+          }} />
+        </>
+      )}
     </PreviewContainer>
   );
 };
