@@ -1,13 +1,16 @@
 {
   "files": {
-    "main.css": "/atlassian-marketplace-generator/static/css/main.b3a6f564.css",
-    "main.js": "/atlassian-marketplace-generator/static/js/main.45dff259.js",
-    "index.html": "/atlassian-marketplace-generator/index.html",
-    "main.b3a6f564.css.map": "/atlassian-marketplace-generator/static/css/main.b3a6f564.css.map",
-    "main.45dff259.js.map": "/atlassian-marketplace-generator/static/js/main.45dff259.js.map"
+    "main.css": "/AtlassianMPACBuilder/static/css/main.6c5893b0.css",
+    "main.js": "/AtlassianMPACBuilder/static/js/main.6911c31d.js",
+    "static/js/977.50d2d7bf.chunk.js": "/AtlassianMPACBuilder/static/js/977.50d2d7bf.chunk.js",
+    "static/js/732.548f36b8.chunk.js": "/AtlassianMPACBuilder/static/js/732.548f36b8.chunk.js",
+    "index.html": "/AtlassianMPACBuilder/index.html",
+    "main.6c5893b0.css.map": "/AtlassianMPACBuilder/static/css/main.6c5893b0.css.map",
+    "main.6911c31d.js.map": "/AtlassianMPACBuilder/static/js/main.6911c31d.js.map",
+    "732.548f36b8.chunk.js.map": "/AtlassianMPACBuilder/static/js/732.548f36b8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b3a6f564.css",
-    "static/js/main.45dff259.js"
+    "static/css/main.6c5893b0.css",
+    "static/js/main.6911c31d.js"
   ]
 }
