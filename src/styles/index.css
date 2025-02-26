@@ -163,4 +163,27 @@ code {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-} 
+}
+
+/* Download buttons specific styles */
+.download-options-container {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.download-buttons-container {
+  display: flex !important;
+  visibility: visible !important;
+}
+
+.download-button {
+  display: flex !important;
+  visibility: visible !important;
+}
+
+.download-button svg {
+  display: inline-block !important;
+  visibility: visible !important;
+}
+
+/* End of download buttons styles */ 

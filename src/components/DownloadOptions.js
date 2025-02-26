@@ -8,6 +8,7 @@ const DownloadContainer = styled.div`
   padding: 16px 20px;
   border-top: 1px solid #DFE1E6;
   background-color: #FAFBFC;
+  display: block !important; /* Ensure this is always displayed */
 `;
 
 const DownloadTitle = styled.h3`
@@ -20,6 +21,7 @@ const DownloadTitle = styled.h3`
 const DownloadButtons = styled.div`
   display: flex;
   gap: 12px;
+  visibility: visible !important; /* Ensure buttons are always visible */
 `;
 
 const DownloadButton = styled.button`
@@ -31,7 +33,7 @@ const DownloadButton = styled.button`
   font-size: 14px;
   font-weight: 500;
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  display: flex;
+  display: flex !important; /* Force display flex */
   align-items: center;
   gap: 8px;
   transition: background-color 0.2s;
@@ -44,6 +46,7 @@ const DownloadButton = styled.button`
   svg {
     width: 16px;
     height: 16px;
+    display: inline-block !important; /* Ensure SVG is displayed */
   }
 `;
 
@@ -329,22 +332,22 @@ const DownloadOptions = ({ previewRef, formData }) => {
   
   return (
     <>
-      <DownloadContainer>
+      <DownloadContainer className="download-options-container">
         <DownloadTitle>Download Preview</DownloadTitle>
-        <DownloadButtons>
-          <DownloadButton onClick={downloadAsPDF} disabled={isGeneratingPDF}>
+        <DownloadButtons className="download-buttons-container">
+          <DownloadButton onClick={downloadAsPDF} disabled={isGeneratingPDF} className="download-button pdf-button">
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
             </svg>
             PDF
           </DownloadButton>
-          <DownloadButton onClick={downloadAsText}>
+          <DownloadButton onClick={downloadAsText} className="download-button text-button">
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
             </svg>
             Text
           </DownloadButton>
-          <DownloadButton onClick={downloadAsSpreadsheet}>
+          <DownloadButton onClick={downloadAsSpreadsheet} className="download-button spreadsheet-button">
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1.99 6H7V7h10.01v2zm0 4H7v-2h10.01v2zm-3 4H7v-2h7.01v2z"/>
             </svg>

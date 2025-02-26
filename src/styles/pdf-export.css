@@ -8,7 +8,8 @@
   overflow-x: hidden;
 }
 
-.pdf-export button,
+/* Hide buttons except for download buttons */
+.pdf-export button:not(.download-button),
 .pdf-export select {
   display: none !important;
 }
@@ -90,14 +91,25 @@
   flex-direction: column !important;
 }
 
-.pdf-export .hero-text {
-  width: 100% !important;
-  padding-right: 0 !important;
-  margin-bottom: 20px !important;
+/* Ensure download buttons are visible */
+.pdf-export .download-options-container {
+  display: block !important;
+  visibility: visible !important;
 }
 
-.pdf-export .hero-image {
-  width: 100% !important;
+.pdf-export .download-buttons-container {
+  display: flex !important;
+  visibility: visible !important;
+}
+
+.pdf-export .download-button {
+  display: flex !important;
+  visibility: visible !important;
+}
+
+.pdf-export .download-button svg {
+  display: inline-block !important;
+  visibility: visible !important;
 }
 
 /* Add a footer with page numbers */
