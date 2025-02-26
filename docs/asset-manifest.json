@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/atlassian-marketplace-generator/static/css/main.b3a6f564.css",
+    "main.js": "/atlassian-marketplace-generator/static/js/main.45dff259.js",
+    "index.html": "/atlassian-marketplace-generator/index.html",
+    "main.b3a6f564.css.map": "/atlassian-marketplace-generator/static/css/main.b3a6f564.css.map",
+    "main.45dff259.js.map": "/atlassian-marketplace-generator/static/js/main.45dff259.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b3a6f564.css",
+    "static/js/main.45dff259.js"
+  ]
+}

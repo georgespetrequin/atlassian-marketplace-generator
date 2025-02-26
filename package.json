@@ -6,20 +6,25 @@
   "scripts": {
     "start": "react-scripts start",
     "dev": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && mv build docs",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "keywords": ["atlassian", "marketplace", "preview", "builder"],
+  "keywords": [
+    "atlassian",
+    "marketplace",
+    "preview",
+    "builder"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "^5.0.1",
     "@atlaskit/css-reset": "^7.0.0",
     "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0"
+    "@emotion/styled": "^11.11.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "^5.0.1"
   },
   "browserslist": {
     "production": [
@@ -32,5 +37,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "homepage": "https://georgespetrequin.github.io/atlassian-marketplace-generator",
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
   }
 }
