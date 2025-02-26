@@ -101,3 +101,33 @@ This project is licensed under the ISC License.
 - Atlassian for their Marketplace platform
 - The README is based on Atlassian's Marketplace listing requirements
 
+## Deployment
+
+This application uses GitHub Pages for deployment with a secure approach to handling environment variables:
+
+### Local Development
+
+1. Copy `.env.local.example` to `.env.local` and fill in your Supabase credentials
+2. Run `npm start` to start the development server
+
+### Secure Deployment Process
+
+For security reasons, we don't store sensitive credentials in the repository. Instead:
+
+1. Environment variables are stored locally and injected during the build process
+2. The build script generates a configuration file with your environment variables
+3. This approach keeps your Supabase credentials secure while allowing the app to function on GitHub Pages
+
+To deploy:
+
+```bash
+# Make sure your environment variables are set
+export REACT_APP_SUPABASE_URL=your_supabase_url
+export REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Then run the deploy script
+npm run deploy
+```
+
+**IMPORTANT**: Never commit your actual Supabase credentials to the repository.
+
