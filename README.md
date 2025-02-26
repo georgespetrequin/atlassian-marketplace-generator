@@ -14,32 +14,9 @@ Based on the rules provided by Atlassian in this [web page](https://developer.at
 - Real-time preview updates as you type
 - Save your Atlassian Marketplace listing preview to a PDF, .txt, or .csv file.
 
-## Getting Started
+## About This Tool
 
-### Prerequisites
-
-- Node.js (v14 or higher)
-- npm (v6 or higher)
-
-### Installation
-
-1. Clone the repository
-```
-git clone https://github.com/yourusername/atlassian-marketplace-preview-builder.git
-cd atlassian-marketplace-preview-builder
-```
-
-2. Install dependencies
-```
-npm install
-```
-
-3. Start the development server
-```
-npm start
-```
-
-4. Open your browser and navigate to `http://localhost:3000`
+This tool was created to help Atlassian Marketplace vendors prepare their listings before submission. It provides a visual preview of how your listing will appear on the Marketplace, helping you refine your content before the official submission process.
 
 ## Usage
 
@@ -47,6 +24,7 @@ npm start
 2. See a real-time preview of your Marketplace listing on the right side
 3. Pay attention to character counts to ensure your content fits within Atlassian's guidelines
 4. Upload images for your app logo, banner, and highlight screenshots
+5. When satisfied with your preview, you can save it for reference
 
 ## Built With
 
