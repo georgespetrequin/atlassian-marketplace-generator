@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import MarketplaceForm from './components/MarketplaceForm';
 import MarketplacePreview from './components/MarketplacePreview';
+import NavigationBar from './components/NavigationBar';
+import SaveListingModal from './components/SaveListingModal';
+import ConfirmationDialog from './components/ConfirmationDialog';
+import { saveMarketplaceListing, getMarketplaceListings, deleteMarketplaceListing } from './services/listingService';
 
 const AppContainer = styled.div`
   display: flex;
@@ -67,6 +71,19 @@ const FooterContent = styled.div`
   font-size: 14px;
 `;
 
+const Notification = styled.div`
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: ${props => props.type === 'error' ? '#FF5630' : '#36B37E'};
+  color: white;
+  padding: 12px 16px;
+  border-radius: 3px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-width: 300px;
+`;
+
 function App() {
   const [formData, setFormData] = useState({
     appName: '',
@@ -93,6 +110,35 @@ function App() {
     moreDetails: '',
     videoUrl: '',
   });
+  
+  const [savedListings, setSavedListings] = useState([]);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [listingToDelete, setListingToDelete] = useState(null);
+  const [notification, setNotification] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch saved listings on component mount
+  useEffect(() => {
+    fetchSavedListings();
+  }, []);
+
+  useEffect(() => {
+    console.log('SUPABASE URL:', process.env.REACT_APP_SUPABASE_URL);
+    console.log('SUPABASE KEY EXISTS:', !!process.env.REACT_APP_SUPABASE_ANON_KEY);
+  }, []);
+
+  const fetchSavedListings = async () => {
+    try {
+      setIsLoading(true);
+      const listings = await getMarketplaceListings();
+      setSavedListings(listings);
+    } catch (error) {
+      showNotification('Error fetching saved listings', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleFormChange = (name, value) => {
     setFormData({
@@ -101,18 +147,92 @@ function App() {
     });
   };
 
+  const handleSaveCurrentListing = () => {
+    setIsSaveModalOpen(true);
+  };
+
+  const handleSaveModalClose = () => {
+    setIsSaveModalOpen(false);
+  };
+
+  const handleSaveListing = async (listingName) => {
+    try {
+      setIsLoading(true);
+      
+      // Prepare the listing data with a name
+      const listingToSave = {
+        ...formData,
+        listingName,
+      };
+      
+      // Save to Supabase
+      await saveMarketplaceListing(listingToSave);
+      
+      // Refresh the listings
+      await fetchSavedListings();
+      
+      // Close the modal
+      setIsSaveModalOpen(false);
+      
+      // Show success notification
+      showNotification('Listing saved successfully');
+    } catch (error) {
+      showNotification('Error saving listing', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSelectListing = (listing) => {
+    // Update the form data with the selected listing
+    setFormData(listing);
+    showNotification('Listing loaded successfully');
+  };
+
+  const handleDeleteListing = (listingId) => {
+    setListingToDelete(listingId);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const confirmDeleteListing = async () => {
+    if (!listingToDelete) return;
+    
+    try {
+      setIsLoading(true);
+      
+      // Delete from Supabase
+      await deleteMarketplaceListing(listingToDelete);
+      
+      // Refresh the listings
+      await fetchSavedListings();
+      
+      // Show success notification
+      showNotification('Listing deleted successfully');
+    } catch (error) {
+      showNotification('Error deleting listing', 'error');
+    } finally {
+      setIsLoading(false);
+      setListingToDelete(null);
+    }
+  };
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    
+    // Auto-hide notification after 3 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+  };
+
   return (
     <AppContainer>
-      <Header>
-        <HeaderContent>
-          <Logo>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11.9999 0C5.3839 0 0 5.3839 0 11.9999C0 18.6159 5.3839 24 11.9999 24C18.6159 24 24 18.6159 24 11.9999C24 5.3839 18.6159 0 11.9999 0ZM16.5479 16.5479C15.9359 17.1599 14.9519 17.1599 14.3399 16.5479L11.9999 14.2079L9.6599 16.5479C9.0479 17.1599 8.0639 17.1599 7.4519 16.5479C6.8399 15.9359 6.8399 14.9519 7.4519 14.3399L9.7919 11.9999L7.4519 9.6599C6.8399 9.0479 6.8399 8.0639 7.4519 7.4519C8.0639 6.8399 9.0479 6.8399 9.6599 7.4519L11.9999 9.7919L14.3399 7.4519C14.9519 6.8399 15.9359 6.8399 16.5479 7.4519C17.1599 8.0639 17.1599 9.0479 16.5479 9.6599L14.2079 11.9999L16.5479 14.3399C17.1599 14.9519 17.1599 15.9359 16.5479 16.5479Z" fill="white"/>
-            </svg>
-            Atlassian Marketplace Preview Builder for Task Management Apps
-          </Logo>
-        </HeaderContent>
-      </Header>
+      <NavigationBar 
+        savedListings={savedListings}
+        onSelectListing={handleSelectListing}
+        onSaveCurrentListing={handleSaveCurrentListing}
+        onDeleteListing={handleDeleteListing}
+      />
       
       <Main>
         <Content>
@@ -123,9 +243,33 @@ function App() {
       
       <Footer>
         <FooterContent>
-          Atlassian Marketplace Preview Builder for Task Management Apps - A tool for product marketers and developers
+          Atlassian Marketplace Preview Builder - A tool for product marketers and developers
         </FooterContent>
       </Footer>
+      
+      <SaveListingModal 
+        isOpen={isSaveModalOpen}
+        onClose={handleSaveModalClose}
+        onSave={handleSaveListing}
+        listingName={formData.appName}
+      />
+      
+      <ConfirmationDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={confirmDeleteListing}
+        title="Delete Listing"
+        message="Are you sure you want to delete this listing? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        destructive={true}
+      />
+      
+      {notification && (
+        <Notification type={notification.type}>
+          {notification.message}
+        </Notification>
+      )}
     </AppContainer>
   );
 }

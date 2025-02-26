@@ -24,13 +24,19 @@ This tool was created to help Atlassian Marketplace vendors prepare their listin
 2. See a real-time preview of your Marketplace listing on the right side
 3. Pay attention to character counts to ensure your content fits within Atlassian's guidelines
 4. Upload images for your app logo, banner, and highlight screenshots
-5. When satisfied with your preview, you can save it for reference
+5. Save your listings to access them later
+6. When satisfied with your preview, you can save it for reference
+
+## Saving Listings
+
+The application allows you to save your marketplace listings to access them later. This feature uses Supabase as a lightweight database solution. To set up Supabase for this project, please refer to the [Supabase Setup Guide](SUPABASE_SETUP.md).
 
 ## Built With
 
 - React - JavaScript library for building user interfaces
 - Emotion - CSS-in-JS library
 - Atlaskit CSS Reset - Atlassian's CSS reset
+- Supabase - Open source Firebase alternative
 
 ## Atlassian Marketplace Requirements
 
