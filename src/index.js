@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@atlaskit/css-reset';
 import './styles/index.css';
+import './styles/pdf-export.css';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

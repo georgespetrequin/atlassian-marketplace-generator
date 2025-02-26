@@ -22,9 +22,12 @@
     "@atlaskit/css-reset": "^7.0.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
+    "file-saver": "^2.0.5",
+    "html2pdf.js": "^0.10.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "xlsx": "^0.18.5"
   },
   "browserslist": {
     "production": [

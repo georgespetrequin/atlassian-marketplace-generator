@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from '@emotion/styled';
+import DownloadOptions from './DownloadOptions';
 
 const PreviewContainer = styled.div`
   background-color: white;
@@ -9,6 +10,8 @@ const PreviewContainer = styled.div`
   position: sticky;
   top: 20px;
   overflow: hidden;
+  width: 100%;
+  max-width: 100%;
 `;
 
 const PreviewTitle = styled.h2`
@@ -22,8 +25,12 @@ const PreviewTitle = styled.h2`
 const MarketplaceHeader = styled.div`
   display: flex;
   align-items: center;
-  padding: 16px 20px;
+  padding: 20px 30px;
   border-bottom: 1px solid #DFE1E6;
+  
+  &.marketplace-header {
+    /* Class for PDF export styling */
+  }
 `;
 
 const AppLogoContainer = styled.div`
@@ -42,6 +49,10 @@ const AppLogoContainer = styled.div`
 
 const AppInfoHeader = styled.div`
   flex: 1;
+  
+  &.app-info-header {
+    /* Class for PDF export styling */
+  }
 `;
 
 const AppNameHeader = styled.h3`
@@ -114,7 +125,7 @@ const MoreOptionsButton = styled.button`
 
 const StatsContainer = styled.div`
   display: flex;
-  padding: 16px 20px;
+  padding: 20px 30px;
   border-bottom: 1px solid #DFE1E6;
   background-color: #FAFBFC;
 `;
@@ -194,7 +205,7 @@ const CloudTag = styled.div`
 `;
 
 const ViewForContainer = styled.div`
-  padding: 16px 20px;
+  padding: 16px 30px;
   border-bottom: 1px solid #DFE1E6;
   display: flex;
   align-items: center;
@@ -221,11 +232,11 @@ const ViewForSelect = styled.div`
 const NavigationTabs = styled.div`
   display: flex;
   border-bottom: 1px solid #DFE1E6;
-  padding: 0 20px;
+  padding: 0 30px;
 `;
 
 const NavTab = styled.div`
-  padding: 12px 16px;
+  padding: 14px 20px;
   cursor: pointer;
   border-bottom: 2px solid ${props => props.active ? '#0052CC' : 'transparent'};
   color: ${props => props.active ? '#0052CC' : '#6B778C'};
@@ -233,25 +244,43 @@ const NavTab = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  padding: 20px;
+  padding: 32px 40px;
 `;
 
 const HeroSection = styled.div`
   display: flex;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
+  align-items: center;
   
   @media (max-width: 768px) {
     flex-direction: column;
+  }
+  
+  &.hero-section {
+    /* Class for PDF export styling */
+    display: flex;
+    align-items: center;
   }
 `;
 
 const HeroText = styled.div`
   flex: 1;
-  padding-right: 20px;
+  padding-right: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   
   @media (max-width: 768px) {
     padding-right: 0;
     padding-bottom: 20px;
+  }
+  
+  &.hero-text {
+    /* Class for PDF export styling */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 `;
 
@@ -260,29 +289,49 @@ const HeroTitle = styled.h2`
   color: #172B4D;
   margin-bottom: 16px;
   line-height: 1.3;
+  text-align: center;
+  
+  &.hero-title {
+    /* Class for PDF export styling */
+    text-align: center;
+  }
 `;
 
 const HeroImage = styled.div`
   flex: 1;
-  border-radius: 3px;
+  border-radius: 8px;
   overflow: hidden;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
   img {
     width: 100%;
     height: auto;
     object-fit: contain;
+    border-radius: 8px;
   }
   
   .placeholder {
     width: 100%;
     height: 100%;
-    min-height: 200px;
+    min-height: 220px;
     background-color: #F4F5F7;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #6B778C;
+    border-radius: 8px;
+  }
+  
+  &.hero-image {
+    /* Class for PDF export styling */
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
   }
 `;
 
@@ -315,15 +364,23 @@ const YouTubePlayButton = styled.div`
 
 const HighlightSection = styled.div`
   display: flex;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
   
   @media (max-width: 768px) {
     flex-direction: column;
+  }
+  
+  &.highlight-section {
+    /* Class for PDF export styling */
   }
 `;
 
 const HighlightContent = styled.div`
   flex: 1;
+  
+  &.highlight-content {
+    /* Class for PDF export styling */
+  }
   
   @media (max-width: 768px) {
     order: ${props => props.imageRight ? 2 : 1};
@@ -336,19 +393,27 @@ const HighlightTitleStyled = styled.h3`
   color: #172B4D;
   margin-bottom: 12px;
   padding-top: ${props => props.imageRight ? '0' : '20px'};
+  
+  &.highlight-title-styled {
+    /* Class for PDF export styling */
+  }
 `;
 
 const HighlightSummaryStyled = styled.div`
   font-size: 16px;
   color: #172B4D;
   line-height: 1.5;
+  
+  &.highlight-summary-styled {
+    /* Class for PDF export styling */
+  }
 `;
 
 const HighlightImageContainer = styled.div`
   flex: 1;
   border-radius: 3px;
   overflow: hidden;
-  margin: ${props => props.imageRight ? '0 0 0 20px' : '0 20px 0 0'};
+  margin: ${props => props.imageRight ? '0 0 0 30px' : '0 30px 0 0'};
   
   @media (max-width: 768px) {
     order: ${props => props.imageRight ? 1 : 2};
@@ -364,7 +429,7 @@ const HighlightImageContainer = styled.div`
   .placeholder {
     width: 100%;
     height: 100%;
-    min-height: 200px;
+    min-height: 220px;
     background-color: #F4F5F7;
     display: flex;
     align-items: center;
@@ -464,6 +529,7 @@ const EmptyState = styled.div`
 `;
 
 const MarketplacePreview = ({ formData }) => {
+  const previewContentRef = useRef(null);
   const hasBasicInfo = formData.appName || formData.appTagline || formData.appLogo;
   const hasHighlight1 = formData.highlightTitle1 || formData.highlightSummary1 || formData.highlightScreenshot1;
   const hasHighlight2 = formData.highlightTitle2 || formData.highlightSummary2 || formData.highlightScreenshot2;
@@ -525,251 +591,255 @@ const MarketplacePreview = ({ formData }) => {
     <PreviewContainer>
       <PreviewTitle>Marketplace Preview</PreviewTitle>
       
-      {!hasBasicInfo && !hasHighlight1 && !hasHighlight2 && !hasHighlight3 ? (
-        <EmptyState>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM11 7H13V13H11V7ZM11 15H13V17H11V15Z" fill="currentColor"/>
-          </svg>
-          <h3>Add your app name on the left and your preview will appear!</h3>
-          <p>We do not take any responsibility for the content of the preview. It is up to you to ensure that it is correct and up to date.</p>
-        </EmptyState>
-      ) : (
-        <>
-          <MarketplaceHeader>
-            <AppLogoContainer>
-              {formData.appLogo ? (
-                <img src={formData.appLogo} alt="App Logo" />
-              ) : (
-                <div style={{ width: '100%', height: '100%', backgroundColor: '#F4F5F7' }}></div>
-              )}
-            </AppLogoContainer>
-            
-            <AppInfoHeader>
-              <AppNameHeader>{formData.appName || 'Your App Name'}</AppNameHeader>
-              <AppVendor>
-                by&nbsp;<a href="#">{formData.companyName || 'Your Company'}</a><a href="#"></a>
-              </AppVendor>
-              <AppCompatibility>
-                {getWorksWithText()}
-              </AppCompatibility>
-            </AppInfoHeader>
-            
-            <HeaderActions>
-              <TryFreeButton>Try it free</TryFreeButton>
-              <BuyNowButton>Buy now</BuyNowButton>
-              <MoreOptionsButton>•••</MoreOptionsButton>
-            </HeaderActions>
-          </MarketplaceHeader>
-          
-          <StatsContainer>
-            <StatColumn>
-              <StatTitle>Overall ratings</StatTitle>
-              <Rating>
-                <span className="rating-value">3.8/4</span>
-                <div className="stars">
-                  ★★★★☆
-                </div>
-                <span className="reviews">(1169)</span>
-              </Rating>
-            </StatColumn>
-            
-            <StatColumn>
-              <StatTitle>Installs</StatTitle>
-              <Installs>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M13 5.41V21a1 1 0 0 1-2 0V5.41l-5.3 5.3a1 1 0 1 1-1.4-1.42l7-7a1 1 0 0 1 1.4 0l7 7a1 1 0 1 1-1.4 1.42L13 5.4z" />
-                </svg>
-                1,052
-              </Installs>
-            </StatColumn>
-            
-            <StatColumn>
-              <StatTitle>Support</StatTitle>
-              <SupportInfo>
-                <SupportTag>PARTNER SUPPORTED</SupportTag>
-                <CloudTag>CLOUD MIGRATION ASSISTANCE</CloudTag>
-              </SupportInfo>
-            </StatColumn>
-          </StatsContainer>
-          
-          <ViewForContainer>
-            <ViewForLabel>View for:</ViewForLabel>
-            <ViewForSelect>
-              Cloud
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8.292 10.293a1.009 1.009 0 0 0 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 0 0 0-1.419.987.987 0 0 0-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 0 0-1.406 0z" fill="currentColor" />
-              </svg>
-            </ViewForSelect>
-          </ViewForContainer>
-          
-          <NavigationTabs>
-            <NavTab active>Overview</NavTab>
-            <NavTab>Reviews</NavTab>
-            <NavTab>Pricing</NavTab>
-            <NavTab>Privacy & Security</NavTab>
-            <NavTab>Support</NavTab>
-            <NavTab>Installation</NavTab>
-          </NavigationTabs>
-          
-          <ContentContainer>
-            <HeroSection>
-              <HeroText>
-                <HeroTitle>
-                  {formData.appTagline || 'Streamline your team\'s productivity with our intuitive task management solution, trusted by thousands of teams since 2018'}
-                </HeroTitle>
-              </HeroText>
-              
-              <HeroImage>
-                {youtubeThumbnailUrl ? (
-                  <>
-                    <img src={youtubeThumbnailUrl} alt="App Video Thumbnail" />
-                    <YouTubePlayButton />
-                  </>
-                ) : formData.appBanner ? (
-                  <img src={formData.appBanner} alt="App Banner" />
+      <div ref={previewContentRef}>
+        {!hasBasicInfo && !hasHighlight1 && !hasHighlight2 && !hasHighlight3 ? (
+          <EmptyState>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM11 7H13V13H11V7ZM11 15H13V17H11V15Z" fill="currentColor"/>
+            </svg>
+            <h3>Add your app name on the left and your preview will appear!</h3>
+            <p>We do not take any responsibility for the content of the preview. It is up to you to ensure that it is correct and up to date.</p>
+          </EmptyState>
+        ) : (
+          <>
+            <MarketplaceHeader className="marketplace-header">
+              <AppLogoContainer>
+                {formData.appLogo ? (
+                  <img src={formData.appLogo} alt="App Logo" />
                 ) : (
-                  <div className="placeholder">
-                    App Banner (1120 x 548px) or YouTube Video URL
-                  </div>
+                  <div style={{ width: '100%', height: '100%', backgroundColor: '#F4F5F7' }}></div>
                 )}
-              </HeroImage>
-            </HeroSection>
+              </AppLogoContainer>
+              
+              <AppInfoHeader className="app-info-header">
+                <AppNameHeader>{formData.appName || 'Your App Name'}</AppNameHeader>
+                <AppVendor>
+                  by&nbsp;<a href="#">{formData.companyName || 'Your Company'}</a><a href="#"></a>
+                </AppVendor>
+                <AppCompatibility>
+                  {getWorksWithText()}
+                </AppCompatibility>
+              </AppInfoHeader>
+              
+              <HeaderActions>
+                <TryFreeButton>Try it free</TryFreeButton>
+                <BuyNowButton>Buy now</BuyNowButton>
+                <MoreOptionsButton>•••</MoreOptionsButton>
+              </HeaderActions>
+            </MarketplaceHeader>
             
-            {hasHighlight1 && (
-              <HighlightSection>
-                <HighlightImageContainer>
-                  {formData.highlightScreenshot1 ? (
-                    <img src={formData.highlightScreenshot1} alt="Highlight Screenshot 1" />
+            <StatsContainer>
+              <StatColumn>
+                <StatTitle>Overall ratings</StatTitle>
+                <Rating>
+                  <span className="rating-value">3.8/4</span>
+                  <div className="stars">
+                    ★★★★☆
+                  </div>
+                  <span className="reviews">(1169)</span>
+                </Rating>
+              </StatColumn>
+              
+              <StatColumn>
+                <StatTitle>Installs</StatTitle>
+                <Installs>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13 5.41V21a1 1 0 0 1-2 0V5.41l-5.3 5.3a1 1 0 1 1-1.4-1.42l7-7a1 1 0 0 1 1.4 0l7 7a1 1 0 1 1-1.4 1.42L13 5.4z" />
+                  </svg>
+                  1,052
+                </Installs>
+              </StatColumn>
+              
+              <StatColumn>
+                <StatTitle>Support</StatTitle>
+                <SupportInfo>
+                  <SupportTag>PARTNER SUPPORTED</SupportTag>
+                  <CloudTag>CLOUD MIGRATION ASSISTANCE</CloudTag>
+                </SupportInfo>
+              </StatColumn>
+            </StatsContainer>
+            
+            <ViewForContainer>
+              <ViewForLabel>View for:</ViewForLabel>
+              <ViewForSelect>
+                Cloud
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8.292 10.293a1.009 1.009 0 0 0 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 0 0 0-1.419.987.987 0 0 0-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 0 0-1.406 0z" fill="currentColor" />
+                </svg>
+              </ViewForSelect>
+            </ViewForContainer>
+            
+            <NavigationTabs>
+              <NavTab active>Overview</NavTab>
+              <NavTab>Reviews</NavTab>
+              <NavTab>Pricing</NavTab>
+              <NavTab>Privacy & Security</NavTab>
+              <NavTab>Support</NavTab>
+              <NavTab>Installation</NavTab>
+            </NavigationTabs>
+            
+            <ContentContainer>
+              <HeroSection className="hero-section">
+                <HeroText className="hero-text">
+                  <HeroTitle className="hero-title">
+                    {formData.appTagline || 'Streamline your team\'s productivity with our intuitive task management solution, trusted by thousands of teams since 2018'}
+                  </HeroTitle>
+                </HeroText>
+                
+                <HeroImage className="hero-image">
+                  {youtubeThumbnailUrl ? (
+                    <>
+                      <img src={youtubeThumbnailUrl} alt="App Video Thumbnail" />
+                      <YouTubePlayButton />
+                    </>
+                  ) : formData.appBanner ? (
+                    <img src={formData.appBanner} alt="App Banner" />
                   ) : (
                     <div className="placeholder">
-                      Highlight Screenshot 1 (1840 x 900px)
+                      App Banner (1120 x 548px) or YouTube Video URL
                     </div>
                   )}
-                </HighlightImageContainer>
-                
-                <HighlightContent>
-                  <HighlightTitleStyled>
-                    {formData.highlightTitle1 || 'The intelligent task management solution for modern teams'}
-                  </HighlightTitleStyled>
-                  <HighlightSummaryStyled>
-                    {formData.highlightSummary1 || 'Choose TaskFlow Pro for powerful task management that brings clarity to any project. From Kanban boards to Gantt charts and sprint planning to resource allocation, TaskFlow Pro enhances your productivity with customizable workflows and templates.'}
-                  </HighlightSummaryStyled>
-                </HighlightContent>
-              </HighlightSection>
-            )}
-            
-            {hasHighlight2 && (
-              <HighlightSection>
-                <HighlightContent imageRight>
-                  <HighlightTitleStyled imageRight>
-                    {formData.highlightTitle2 || 'Why teams choose TaskFlow Pro for project management'}
-                  </HighlightTitleStyled>
-                  <HighlightSummaryStyled>
-                    {formData.highlightSummary2 || 'TaskFlow Pro combines task management and team collaboration in one app, enabling real-time updates with full Jira integration. Customize workflows and automate repetitive tasks to create, assign, and track work directly within your existing tools.'}
-                  </HighlightSummaryStyled>
-                </HighlightContent>
-                
-                <HighlightImageContainer imageRight>
-                  {formData.highlightScreenshot2 ? (
-                    <img src={formData.highlightScreenshot2} alt="Highlight Screenshot 2" />
-                  ) : (
-                    <div className="placeholder">
-                      Highlight Screenshot 2 (1840 x 900px)
-                    </div>
-                  )}
-                </HighlightImageContainer>
-              </HighlightSection>
-            )}
-            
-            {hasHighlight3 && (
-              <HighlightSection>
-                <HighlightImageContainer>
-                  {formData.highlightScreenshot3 ? (
-                    <img src={formData.highlightScreenshot3} alt="Highlight Screenshot 3" />
-                  ) : (
-                    <div className="placeholder">
-                      Highlight Screenshot 3 (1840 x 900px)
-                    </div>
-                  )}
-                </HighlightImageContainer>
-                
-                <HighlightContent>
-                  <HighlightTitleStyled>
-                    {formData.highlightTitle3 || 'Smart Automation'}
-                  </HighlightTitleStyled>
-                  <HighlightSummaryStyled>
-                    {formData.highlightSummary3 || 'Save time with intelligent automation that handles repetitive tasks. Set up custom triggers and actions to automatically assign tasks, send notifications, update statuses, and generate reports based on your team\'s specific workflow needs.'}
-                  </HighlightSummaryStyled>
-                </HighlightContent>
-              </HighlightSection>
-            )}
-            
-            {formData.moreDetails && (
-              <>
-                <SectionTitle>More details</SectionTitle>
-                <MoreDetailsContent>
-                  {(() => {
-                    const paragraphs = formData.moreDetails.split('\n');
-                    const elements = [];
-                    let inList = false;
-                    let currentListItems = [];
-                    let listKey = 0;
-                    
-                    paragraphs.forEach((paragraph, index) => {
-                      const isBullet = paragraph.trim().startsWith('* ') || paragraph.trim().startsWith('- ');
+                </HeroImage>
+              </HeroSection>
+              
+              {hasHighlight1 && (
+                <HighlightSection className="highlight-section">
+                  <HighlightImageContainer>
+                    {formData.highlightScreenshot1 ? (
+                      <img src={formData.highlightScreenshot1} alt="Highlight Screenshot 1" />
+                    ) : (
+                      <div className="placeholder">
+                        Highlight Screenshot 1 (1840 x 900px)
+                      </div>
+                    )}
+                  </HighlightImageContainer>
+                  
+                  <HighlightContent className="highlight-content">
+                    <HighlightTitleStyled className="highlight-title-styled">
+                      {formData.highlightTitle1 || 'The intelligent task management solution for modern teams'}
+                    </HighlightTitleStyled>
+                    <HighlightSummaryStyled className="highlight-summary-styled">
+                      {formData.highlightSummary1 || 'Choose TaskFlow Pro for powerful task management that brings clarity to any project. From Kanban boards to Gantt charts and sprint planning to resource allocation, TaskFlow Pro enhances your productivity with customizable workflows and templates.'}
+                    </HighlightSummaryStyled>
+                  </HighlightContent>
+                </HighlightSection>
+              )}
+              
+              {hasHighlight2 && (
+                <HighlightSection className="highlight-section">
+                  <HighlightContent imageRight className="highlight-content">
+                    <HighlightTitleStyled imageRight className="highlight-title-styled">
+                      {formData.highlightTitle2 || 'Why teams choose TaskFlow Pro for project management'}
+                    </HighlightTitleStyled>
+                    <HighlightSummaryStyled className="highlight-summary-styled">
+                      {formData.highlightSummary2 || 'TaskFlow Pro combines task management and team collaboration in one app, enabling real-time updates with full Jira integration. Customize workflows and automate repetitive tasks to create, assign, and track work directly within your existing tools.'}
+                    </HighlightSummaryStyled>
+                  </HighlightContent>
+                  
+                  <HighlightImageContainer imageRight>
+                    {formData.highlightScreenshot2 ? (
+                      <img src={formData.highlightScreenshot2} alt="Highlight Screenshot 2" />
+                    ) : (
+                      <div className="placeholder">
+                        Highlight Screenshot 2 (1840 x 900px)
+                      </div>
+                    )}
+                  </HighlightImageContainer>
+                </HighlightSection>
+              )}
+              
+              {hasHighlight3 && (
+                <HighlightSection className="highlight-section">
+                  <HighlightImageContainer>
+                    {formData.highlightScreenshot3 ? (
+                      <img src={formData.highlightScreenshot3} alt="Highlight Screenshot 3" />
+                    ) : (
+                      <div className="placeholder">
+                        Highlight Screenshot 3 (1840 x 900px)
+                      </div>
+                    )}
+                  </HighlightImageContainer>
+                  
+                  <HighlightContent className="highlight-content">
+                    <HighlightTitleStyled className="highlight-title-styled">
+                      {formData.highlightTitle3 || 'Smart Automation'}
+                    </HighlightTitleStyled>
+                    <HighlightSummaryStyled className="highlight-summary-styled">
+                      {formData.highlightSummary3 || 'Save time with intelligent automation that handles repetitive tasks. Set up custom triggers and actions to automatically assign tasks, send notifications, update statuses, and generate reports based on your team\'s specific workflow needs.'}
+                    </HighlightSummaryStyled>
+                  </HighlightContent>
+                </HighlightSection>
+              )}
+              
+              {formData.moreDetails && (
+                <>
+                  <SectionTitle>More details</SectionTitle>
+                  <MoreDetailsContent>
+                    {(() => {
+                      const paragraphs = formData.moreDetails.split('\n');
+                      const elements = [];
+                      let inList = false;
+                      let currentListItems = [];
+                      let listKey = 0;
                       
-                      if (isBullet) {
-                        // Add the bullet point to the current list
-                        currentListItems.push(
-                          <li key={`li-${index}`}>{paragraph.trim().substring(2)}</li>
-                        );
-                        inList = true;
-                      } else {
-                        // If we were in a list and now we're not, add the list to elements
-                        if (inList) {
-                          elements.push(
-                            <ul key={`ul-${listKey}`}>{currentListItems}</ul>
-                          );
-                          currentListItems = [];
-                          listKey++;
-                          inList = false;
-                        }
+                      paragraphs.forEach((paragraph, index) => {
+                        const isBullet = paragraph.trim().startsWith('* ') || paragraph.trim().startsWith('- ');
                         
-                        // Add the paragraph if it's not empty
-                        if (paragraph.trim()) {
-                          elements.push(<p key={`p-${index}`}>{paragraph}</p>);
+                        if (isBullet) {
+                          // Add the bullet point to the current list
+                          currentListItems.push(
+                            <li key={`li-${index}`}>{paragraph.trim().substring(2)}</li>
+                          );
+                          inList = true;
+                        } else {
+                          // If we were in a list and now we're not, add the list to elements
+                          if (inList) {
+                            elements.push(
+                              <ul key={`ul-${listKey}`}>{currentListItems}</ul>
+                            );
+                            currentListItems = [];
+                            listKey++;
+                            inList = false;
+                          }
+                          
+                          // Add the paragraph if it's not empty
+                          if (paragraph.trim()) {
+                            elements.push(<p key={`p-${index}`}>{paragraph}</p>);
+                          }
                         }
+                      });
+                      
+                      // If we're still in a list at the end, add it to elements
+                      if (inList) {
+                        elements.push(
+                          <ul key={`ul-${listKey}`}>{currentListItems}</ul>
+                        );
                       }
-                    });
-                    
-                    // If we're still in a list at the end, add it to elements
-                    if (inList) {
-                      elements.push(
-                        <ul key={`ul-${listKey}`}>{currentListItems}</ul>
-                      );
-                    }
-                    
-                    return elements;
-                  })()}
-                </MoreDetailsContent>
-              </>
-            )}
-            
-            {formData.videoUrl && (
-              <SupportingMedia>
-                <h3>Supporting media</h3>
-                <div className="media-grid">
-                  <div className="media-item">
-                    <div className="media-image">
-                      Video URL: {formData.videoUrl}
+                      
+                      return elements;
+                    })()}
+                  </MoreDetailsContent>
+                </>
+              )}
+              
+              {formData.videoUrl && (
+                <SupportingMedia>
+                  <h3>Supporting media</h3>
+                  <div className="media-grid">
+                    <div className="media-item">
+                      <div className="media-image">
+                        Video URL: {formData.videoUrl}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </SupportingMedia>
-            )}
-          </ContentContainer>
-        </>
-      )}
+                </SupportingMedia>
+              )}
+            </ContentContainer>
+          </>
+        )}
+      </div>
+      
+      {hasBasicInfo && <DownloadOptions previewRef={previewContentRef} formData={formData} />}
     </PreviewContainer>
   );
 };

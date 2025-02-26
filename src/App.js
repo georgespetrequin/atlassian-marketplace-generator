@@ -16,7 +16,7 @@ const Header = styled.header`
 `;
 
 const HeaderContent = styled.div`
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
@@ -41,11 +41,11 @@ const Main = styled.main`
 `;
 
 const Content = styled.div`
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 500px 1fr;
-  gap: 24px;
+  gap: 32px;
   
   @media (max-width: 1200px) {
     grid-template-columns: 1fr;
@@ -59,7 +59,7 @@ const Footer = styled.footer`
 `;
 
 const FooterContent = styled.div`
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 20px;
   text-align: center;
