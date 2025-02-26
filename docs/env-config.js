@@ -1,4 +1,0 @@
-window.ENV = {
-  REACT_APP_SUPABASE_URL: "https://okfzcsomvoibjnpdliam.supabase.co",
-  REACT_APP_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rZnpjc29tdm9pYmpucGRsaWFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA2MDYxODQsImV4cCI6MjA1NjE4MjE4NH0.hIy4TZiSkC0McXfusAxzZe7HnlBZAxQUTw4KjPY2JUE"
-}; 
