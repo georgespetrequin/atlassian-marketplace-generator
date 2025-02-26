@@ -1,0 +1,36 @@
+{
+  "name": "atlassian-marketplace-preview-builder",
+  "version": "1.0.0",
+  "description": "A tool to preview Atlassian Marketplace listings before submission",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "keywords": ["atlassian", "marketplace", "preview", "builder"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "^5.0.1",
+    "@atlaskit/css-reset": "^7.0.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
