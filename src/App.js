@@ -85,7 +85,7 @@ const Notification = styled.div`
 `;
 
 function App() {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     appName: '',
     appTagline: '',
     appLogo: null,
@@ -109,7 +109,9 @@ function App() {
     highlightScreenshot3: null,
     moreDetails: '',
     videoUrl: '',
-  });
+  };
+  
+  const [formData, setFormData] = useState(initialFormData);
   
   const [savedListings, setSavedListings] = useState([]);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -216,6 +218,11 @@ function App() {
     }
   };
 
+  const handleStartNewListing = () => {
+    setFormData(initialFormData);
+    showNotification('Started a new listing');
+  };
+
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
     
@@ -232,6 +239,7 @@ function App() {
         onSelectListing={handleSelectListing}
         onSaveCurrentListing={handleSaveCurrentListing}
         onDeleteListing={handleDeleteListing}
+        onStartNewListing={handleStartNewListing}
       />
       
       <Main>

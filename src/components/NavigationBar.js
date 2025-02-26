@@ -42,6 +42,19 @@ const NavLink = styled.div`
   }
 `;
 
+const StartNewButton = styled(NavLink)`
+  background-color: #36B37E;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 3px;
+  font-weight: 500;
+  
+  &:hover {
+    background-color: #2da06c;
+    text-decoration: none;
+  }
+`;
+
 const DropdownButton = styled.button`
   background: none;
   border: none;
@@ -116,7 +129,8 @@ const NavigationBar = ({
   savedListings = [], 
   onSelectListing, 
   onSaveCurrentListing,
-  onDeleteListing 
+  onDeleteListing,
+  onStartNewListing
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   
@@ -145,6 +159,10 @@ const NavigationBar = ({
         </Logo>
         
         <NavLinks>
+          <StartNewButton onClick={onStartNewListing}>
+            Start New Listing
+          </StartNewButton>
+          
           <NavLink onClick={onSaveCurrentListing}>
             Save Current Listing
           </NavLink>
