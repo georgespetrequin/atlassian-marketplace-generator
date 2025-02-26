@@ -5,7 +5,9 @@ import MarketplacePreview from './components/MarketplacePreview';
 import NavigationBar from './components/NavigationBar';
 import SaveListingModal from './components/SaveListingModal';
 import ConfirmationDialog from './components/ConfirmationDialog';
+import AuthForm from './components/AuthForm';
 import { saveMarketplaceListing, getMarketplaceListings, deleteMarketplaceListing } from './services/listingService';
+import { registerUser, loginUser, logoutUser, getCurrentUser, onAuthStateChange } from './services/authService';
 
 const AppContainer = styled.div`
   display: flex;
@@ -84,6 +86,30 @@ const Notification = styled.div`
   max-width: 300px;
 `;
 
+const AuthContainer = styled.div`
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+`;
+
+const WelcomeMessage = styled.div`
+  text-align: center;
+  margin-bottom: 32px;
+`;
+
+const WelcomeTitle = styled.h1`
+  font-size: 28px;
+  color: #172B4D;
+  margin-bottom: 16px;
+`;
+
+const WelcomeText = styled.p`
+  font-size: 16px;
+  color: #6B778C;
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
 function App() {
   const initialFormData = {
     appName: '',
@@ -119,21 +145,52 @@ function App() {
   const [listingToDelete, setListingToDelete] = useState(null);
   const [notification, setNotification] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
 
-  // Fetch saved listings on component mount
+  // Check for existing user session on component mount
   useEffect(() => {
-    fetchSavedListings();
+    const checkUser = async () => {
+      try {
+        setIsAuthenticating(true);
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+        
+        if (currentUser) {
+          // If user is logged in, fetch their listings
+          await fetchSavedListings(currentUser.id);
+        }
+      } catch (error) {
+        console.error('Error checking user session:', error);
+      } finally {
+        setIsAuthenticating(false);
+      }
+    };
+    
+    checkUser();
+    
+    // Set up auth state change listener
+    const unsubscribe = onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        setUser(session.user);
+        await fetchSavedListings(session.user.id);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setSavedListings([]);
+      }
+    });
+    
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
-  useEffect(() => {
-    console.log('SUPABASE URL:', process.env.REACT_APP_SUPABASE_URL);
-    console.log('SUPABASE KEY EXISTS:', !!process.env.REACT_APP_SUPABASE_ANON_KEY);
-  }, []);
-
-  const fetchSavedListings = async () => {
+  const fetchSavedListings = async (userId) => {
+    if (!userId) return;
+    
     try {
       setIsLoading(true);
-      const listings = await getMarketplaceListings();
+      const listings = await getMarketplaceListings(userId);
       setSavedListings(listings);
     } catch (error) {
       showNotification('Error fetching saved listings', 'error');
@@ -150,6 +207,11 @@ function App() {
   };
 
   const handleSaveCurrentListing = () => {
+    if (!user) {
+      showNotification('Please log in to save listings', 'error');
+      return;
+    }
+    
     setIsSaveModalOpen(true);
   };
 
@@ -158,6 +220,11 @@ function App() {
   };
 
   const handleSaveListing = async (listingName) => {
+    if (!user) {
+      showNotification('Please log in to save listings', 'error');
+      return;
+    }
+    
     try {
       setIsLoading(true);
       
@@ -167,11 +234,11 @@ function App() {
         listingName,
       };
       
-      // Save to Supabase
-      await saveMarketplaceListing(listingToSave);
+      // Save to Supabase with user ID
+      await saveMarketplaceListing(listingToSave, user.id);
       
       // Refresh the listings
-      await fetchSavedListings();
+      await fetchSavedListings(user.id);
       
       // Close the modal
       setIsSaveModalOpen(false);
@@ -197,16 +264,16 @@ function App() {
   };
 
   const confirmDeleteListing = async () => {
-    if (!listingToDelete) return;
+    if (!listingToDelete || !user) return;
     
     try {
       setIsLoading(true);
       
-      // Delete from Supabase
-      await deleteMarketplaceListing(listingToDelete);
+      // Delete from Supabase with user ID
+      await deleteMarketplaceListing(listingToDelete, user.id);
       
       // Refresh the listings
-      await fetchSavedListings();
+      await fetchSavedListings(user.id);
       
       // Show success notification
       showNotification('Listing deleted successfully');
@@ -215,12 +282,54 @@ function App() {
     } finally {
       setIsLoading(false);
       setListingToDelete(null);
+      setIsDeleteConfirmOpen(false);
     }
   };
 
   const handleStartNewListing = () => {
     setFormData(initialFormData);
     showNotification('Started a new listing');
+  };
+
+  const handleLogin = async (email, password) => {
+    try {
+      setIsLoading(true);
+      const { user: loggedInUser } = await loginUser(email, password);
+      setUser(loggedInUser);
+      await fetchSavedListings(loggedInUser.id);
+      showNotification('Logged in successfully');
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegister = async (email, password) => {
+    try {
+      setIsLoading(true);
+      const { user: registeredUser } = await registerUser(email, password);
+      setUser(registeredUser);
+      showNotification('Account created successfully');
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      setIsLoading(true);
+      await logoutUser();
+      setUser(null);
+      setSavedListings([]);
+      showNotification('Logged out successfully');
+    } catch (error) {
+      showNotification('Error logging out', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const showNotification = (message, type = 'success') => {
@@ -232,6 +341,20 @@ function App() {
     }, 3000);
   };
 
+  // Show loading state while checking authentication
+  if (isAuthenticating) {
+    return (
+      <AppContainer>
+        <NavigationBar />
+        <Main>
+          <div style={{ textAlign: 'center', padding: '40px' }}>
+            Loading...
+          </div>
+        </Main>
+      </AppContainer>
+    );
+  }
+
   return (
     <AppContainer>
       <NavigationBar 
@@ -240,13 +363,31 @@ function App() {
         onSaveCurrentListing={handleSaveCurrentListing}
         onDeleteListing={handleDeleteListing}
         onStartNewListing={handleStartNewListing}
+        user={user}
+        onLogout={handleLogout}
       />
       
       <Main>
-        <Content>
-          <MarketplaceForm formData={formData} onChange={handleFormChange} />
-          <MarketplacePreview formData={formData} />
-        </Content>
+        {user ? (
+          <Content>
+            <MarketplaceForm formData={formData} onChange={handleFormChange} />
+            <MarketplacePreview formData={formData} />
+          </Content>
+        ) : (
+          <AuthContainer>
+            <WelcomeMessage>
+              <WelcomeTitle>Welcome to Atlassian Marketplace Preview Builder</WelcomeTitle>
+              <WelcomeText>
+                Create beautiful marketplace listings for your Atlassian apps. 
+                Log in or create an account to save your listings and access them later.
+              </WelcomeText>
+            </WelcomeMessage>
+            <AuthForm 
+              onLogin={handleLogin}
+              onRegister={handleRegister}
+            />
+          </AuthContainer>
+        )}
       </Main>
       
       <Footer>

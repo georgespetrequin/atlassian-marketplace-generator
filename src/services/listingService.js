@@ -6,20 +6,22 @@ const LISTINGS_TABLE = 'marketplace_listings';
 /**
  * Save a marketplace listing to Supabase
  * @param {Object} listingData - The listing data to save
+ * @param {string} userId - The ID of the user saving the listing
  * @returns {Promise<Object>} - The saved listing data with ID
  */
-export const saveMarketplaceListing = async (listingData) => {
+export const saveMarketplaceListing = async (listingData, userId) => {
   try {
-    // Add timestamp for created_at
-    const listingWithTimestamp = {
+    // Add timestamp and user_id for created_at
+    const listingWithMetadata = {
       ...listingData,
       created_at: new Date().toISOString(),
+      user_id: userId,
     };
     
     // Insert the listing into Supabase
     const { data, error } = await supabase
       .from(LISTINGS_TABLE)
-      .insert([listingWithTimestamp])
+      .insert([listingWithMetadata])
       .select();
     
     if (error) {
@@ -34,14 +36,21 @@ export const saveMarketplaceListing = async (listingData) => {
 };
 
 /**
- * Get all marketplace listings from Supabase
+ * Get all marketplace listings for a specific user
+ * @param {string} userId - The ID of the user whose listings to retrieve
  * @returns {Promise<Array>} - Array of listing objects
  */
-export const getMarketplaceListings = async () => {
+export const getMarketplaceListings = async (userId) => {
   try {
+    // If no userId is provided, return an empty array
+    if (!userId) {
+      return [];
+    }
+    
     const { data, error } = await supabase
       .from(LISTINGS_TABLE)
       .select('*')
+      .eq('user_id', userId)
       .order('created_at', { ascending: false });
     
     if (error) {
@@ -58,15 +67,22 @@ export const getMarketplaceListings = async () => {
 /**
  * Get a specific marketplace listing by ID
  * @param {string} id - The ID of the listing to retrieve
+ * @param {string} userId - The ID of the user who owns the listing
  * @returns {Promise<Object>} - The listing object
  */
-export const getMarketplaceListingById = async (id) => {
+export const getMarketplaceListingById = async (id, userId) => {
   try {
-    const { data, error } = await supabase
+    const query = supabase
       .from(LISTINGS_TABLE)
       .select('*')
-      .eq('id', id)
-      .single();
+      .eq('id', id);
+    
+    // If userId is provided, ensure the listing belongs to the user
+    if (userId) {
+      query.eq('user_id', userId);
+    }
+    
+    const { data, error } = await query.single();
     
     if (error) {
       throw new Error(error.message);
@@ -82,14 +98,16 @@ export const getMarketplaceListingById = async (id) => {
 /**
  * Delete a marketplace listing by ID
  * @param {string} id - The ID of the listing to delete
+ * @param {string} userId - The ID of the user who owns the listing
  * @returns {Promise<void>}
  */
-export const deleteMarketplaceListing = async (id) => {
+export const deleteMarketplaceListing = async (id, userId) => {
   try {
     const { error } = await supabase
       .from(LISTINGS_TABLE)
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', userId);
     
     if (error) {
       throw new Error(error.message);

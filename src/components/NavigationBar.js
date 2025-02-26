@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
 
 const NavContainer = styled.nav`
@@ -30,47 +30,24 @@ const Logo = styled.div`
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
+  gap: 16px;
 `;
 
 const NavLink = styled.div`
-  margin-left: 24px;
   position: relative;
-  cursor: pointer;
-  
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const StartNewButton = styled(NavLink)`
-  background-color: #36B37E;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 3px;
-  font-weight: 500;
-  
-  &:hover {
-    background-color: #2da06c;
-    text-decoration: none;
-  }
 `;
 
 const DropdownButton = styled.button`
   background: none;
   border: none;
   color: white;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  
-  svg {
-    margin-left: 8px;
-  }
-  
-  &:hover {
-    text-decoration: underline;
-  }
+  gap: 4px;
+  padding: 8px 0;
 `;
 
 const DropdownMenu = styled.div`
@@ -78,21 +55,22 @@ const DropdownMenu = styled.div`
   top: 100%;
   right: 0;
   background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 250px;
+  border-radius: 3px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
   z-index: 10;
-  margin-top: 8px;
   display: ${props => props.isOpen ? 'block' : 'none'};
+  margin-top: 4px;
 `;
 
 const DropdownItem = styled.div`
-  padding: 12px 16px;
+  padding: 8px 16px;
   color: #172B4D;
+  font-size: 14px;
   cursor: pointer;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   
   &:hover {
     background-color: #F4F5F7;
@@ -102,37 +80,82 @@ const DropdownItem = styled.div`
 const DeleteButton = styled.button`
   background: none;
   border: none;
-  color: #FF5630;
+  color: #6B778C;
   cursor: pointer;
   padding: 4px;
-  margin-left: 8px;
-  border-radius: 3px;
-  
-  &:hover {
-    background-color: #FFEBE6;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
   
   svg {
     width: 16px;
     height: 16px;
   }
+  
+  &:hover {
+    color: #DE350B;
+  }
+`;
+
+const StartNewButton = styled.button`
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 16px;
+`;
+
+const UserEmail = styled.span`
+  font-size: 14px;
+  color: white;
+`;
+
+const LogoutButton = styled.button`
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 `;
 
 const EmptyState = styled.div`
   padding: 16px;
-  color: #6B778C;
   text-align: center;
-  font-style: italic;
+  color: #6B778C;
+  font-size: 14px;
 `;
 
 const NavigationBar = ({ 
-  savedListings = [], 
+  savedListings, 
   onSelectListing, 
-  onSaveCurrentListing,
-  onDeleteListing,
-  onStartNewListing
+  onSaveCurrentListing, 
+  onDeleteListing, 
+  onStartNewListing,
+  user,
+  onLogout
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -148,57 +171,84 @@ const NavigationBar = ({
     onDeleteListing(listingId);
   };
   
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
   return (
     <NavContainer>
       <NavContent>
         <Logo>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M11.9999 0C5.3839 0 0 5.3839 0 11.9999C0 18.6159 5.3839 24 11.9999 24C18.6159 24 24 18.6159 24 11.9999C24 5.3839 18.6159 0 11.9999 0ZM16.5479 16.5479C15.9359 17.1599 14.9519 17.1599 14.3399 16.5479L11.9999 14.2079L9.6599 16.5479C9.0479 17.1599 8.0639 17.1599 7.4519 16.5479C6.8399 15.9359 6.8399 14.9519 7.4519 14.3399L9.7919 11.9999L7.4519 9.6599C6.8399 9.0479 6.8399 8.0639 7.4519 7.4519C8.0639 6.8399 9.0479 6.8399 9.6599 7.4519L11.9999 9.7919L14.3399 7.4519C14.9519 6.8399 15.9359 6.8399 16.5479 7.4519C17.1599 8.0639 17.1599 9.0479 16.5479 9.6599L14.2079 11.9999L16.5479 14.3399C17.1599 14.9519 17.1599 15.9359 16.5479 16.5479Z" fill="white"/>
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM15.88 8.29L10 14.17L8.12 12.29C7.73 11.9 7.1 11.9 6.71 12.29C6.32 12.68 6.32 13.31 6.71 13.7L9.3 16.29C9.69 16.68 10.32 16.68 10.71 16.29L17.3 9.7C17.69 9.31 17.69 8.68 17.3 8.29C16.91 7.9 16.27 7.9 15.88 8.29Z" fill="white"/>
           </svg>
           Atlassian Marketplace Preview Builder
         </Logo>
         
-        <NavLinks>
-          <StartNewButton onClick={onStartNewListing}>
-            Start New Listing
-          </StartNewButton>
-          
-          <NavLink onClick={onSaveCurrentListing}>
-            Save Current Listing
-          </NavLink>
-          
-          <NavLink>
-            <DropdownButton onClick={toggleDropdown}>
-              Saved Listings
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 6L8 10L12 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </DropdownButton>
-            
-            <DropdownMenu isOpen={dropdownOpen}>
-              {savedListings.length > 0 ? (
-                savedListings.map((listing) => (
-                  <DropdownItem 
-                    key={listing.id} 
-                    onClick={() => handleSelectListing(listing)}
-                  >
-                    <span>{listing.listingName || listing.appName || 'Unnamed Listing'}</span>
-                    <DeleteButton 
-                      onClick={(e) => handleDeleteClick(e, listing.id)}
-                      title="Delete listing"
-                    >
-                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/>
-                      </svg>
-                    </DeleteButton>
-                  </DropdownItem>
-                ))
-              ) : (
-                <EmptyState>No saved listings yet</EmptyState>
-              )}
-            </DropdownMenu>
-          </NavLink>
-        </NavLinks>
+        {user ? (
+          <>
+            <NavLinks>
+              <UserInfo>
+                <UserEmail>{user.email}</UserEmail>
+                <LogoutButton onClick={onLogout}>Log Out</LogoutButton>
+              </UserInfo>
+              
+              <StartNewButton onClick={onStartNewListing}>
+                Start New Listing
+              </StartNewButton>
+              
+              <NavLink onClick={onSaveCurrentListing}>
+                Save Current Listing
+              </NavLink>
+              
+              <NavLink ref={dropdownRef}>
+                <DropdownButton onClick={toggleDropdown}>
+                  Saved Listings
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6L8 10L12 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </DropdownButton>
+                
+                <DropdownMenu isOpen={dropdownOpen}>
+                  {savedListings.length > 0 ? (
+                    savedListings.map((listing) => (
+                      <DropdownItem 
+                        key={listing.id} 
+                        onClick={() => handleSelectListing(listing)}
+                      >
+                        <span>{listing.listingName || listing.appName || 'Unnamed Listing'}</span>
+                        <DeleteButton 
+                          onClick={(e) => handleDeleteClick(e, listing.id)}
+                          title="Delete listing"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/>
+                          </svg>
+                        </DeleteButton>
+                      </DropdownItem>
+                    ))
+                  ) : (
+                    <EmptyState>No saved listings yet</EmptyState>
+                  )}
+                </DropdownMenu>
+              </NavLink>
+            </NavLinks>
+          </>
+        ) : (
+          <div>
+            {/* No navigation links shown when user is not logged in */}
+          </div>
+        )}
       </NavContent>
     </NavContainer>
   );
