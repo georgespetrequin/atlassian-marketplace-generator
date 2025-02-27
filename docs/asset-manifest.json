@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/atlassian-marketplace-generator/static/css/main.6c5893b0.css",
-    "main.js": "/atlassian-marketplace-generator/static/js/main.0ab4f07b.js",
+    "main.js": "/atlassian-marketplace-generator/static/js/main.62b66ff7.js",
     "static/js/977.50d2d7bf.chunk.js": "/atlassian-marketplace-generator/static/js/977.50d2d7bf.chunk.js",
     "static/js/732.548f36b8.chunk.js": "/atlassian-marketplace-generator/static/js/732.548f36b8.chunk.js",
     "static/js/952.e09b00f3.chunk.js": "/atlassian-marketplace-generator/static/js/952.e09b00f3.chunk.js",
     "index.html": "/atlassian-marketplace-generator/index.html",
     "main.6c5893b0.css.map": "/atlassian-marketplace-generator/static/css/main.6c5893b0.css.map",
-    "main.0ab4f07b.js.map": "/atlassian-marketplace-generator/static/js/main.0ab4f07b.js.map",
+    "main.62b66ff7.js.map": "/atlassian-marketplace-generator/static/js/main.62b66ff7.js.map",
     "732.548f36b8.chunk.js.map": "/atlassian-marketplace-generator/static/js/732.548f36b8.chunk.js.map",
     "952.e09b00f3.chunk.js.map": "/atlassian-marketplace-generator/static/js/952.e09b00f3.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6c5893b0.css",
-    "static/js/main.0ab4f07b.js"
+    "static/js/main.62b66ff7.js"
   ]
 }
