@@ -6,6 +6,7 @@ import NavigationBar from './components/NavigationBar';
 import SaveListingModal from './components/SaveListingModal';
 import ConfirmationDialog from './components/ConfirmationDialog';
 import AuthForm from './components/AuthForm';
+import AuthModal from './components/AuthModal';
 import { saveMarketplaceListing, getMarketplaceListings, deleteMarketplaceListing } from './services/listingService';
 import { registerUser, loginUser, logoutUser, getCurrentUser, onAuthStateChange } from './services/authService';
 
@@ -147,6 +148,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [pendingSaveAction, setPendingSaveAction] = useState(false);
 
   // Check for existing user session on component mount
   useEffect(() => {
@@ -208,7 +211,10 @@ function App() {
 
   const handleSaveCurrentListing = () => {
     if (!user) {
-      showNotification('Please log in to save listings', 'error');
+      // Instead of showing a notification, open the auth modal
+      setIsAuthModalOpen(true);
+      // Set a flag to indicate we want to save after login
+      setPendingSaveAction(true);
       return;
     }
     
@@ -219,9 +225,15 @@ function App() {
     setIsSaveModalOpen(false);
   };
 
+  const handleAuthModalClose = () => {
+    setIsAuthModalOpen(false);
+    setPendingSaveAction(false);
+  };
+
   const handleSaveListing = async (listingName) => {
     if (!user) {
-      showNotification('Please log in to save listings', 'error');
+      // This shouldn't happen now, but just in case
+      setIsAuthModalOpen(true);
       return;
     }
     
@@ -297,9 +309,19 @@ function App() {
       const { user: loggedInUser } = await loginUser(email, password);
       setUser(loggedInUser);
       await fetchSavedListings(loggedInUser.id);
+      
+      // Close the auth modal
+      setIsAuthModalOpen(false);
+      
+      // If there was a pending save action, open the save modal
+      if (pendingSaveAction) {
+        setPendingSaveAction(false);
+        setIsSaveModalOpen(true);
+      }
+      
       showNotification('Logged in successfully');
     } catch (error) {
-      throw error;
+      showNotification(error.message, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -310,9 +332,19 @@ function App() {
       setIsLoading(true);
       const { user: registeredUser } = await registerUser(email, password);
       setUser(registeredUser);
+      
+      // Close the auth modal
+      setIsAuthModalOpen(false);
+      
+      // If there was a pending save action, open the save modal
+      if (pendingSaveAction) {
+        setPendingSaveAction(false);
+        setIsSaveModalOpen(true);
+      }
+      
       showNotification('Account created successfully');
     } catch (error) {
-      throw error;
+      showNotification(error.message, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -368,39 +400,28 @@ function App() {
       />
       
       <Main>
-        {user ? (
-          <Content>
-            <MarketplaceForm formData={formData} onChange={handleFormChange} />
-            <MarketplacePreview formData={formData} />
-          </Content>
-        ) : (
-          <AuthContainer>
-            <WelcomeMessage>
-              <WelcomeTitle>Welcome to Atlassian Marketplace Preview Builder</WelcomeTitle>
-              <WelcomeText>
-                Create beautiful marketplace listings for your Atlassian apps. 
-                Log in or create an account to save your listings and access them later.
-              </WelcomeText>
-            </WelcomeMessage>
-            <AuthForm 
-              onLogin={handleLogin}
-              onRegister={handleRegister}
-            />
-          </AuthContainer>
-        )}
+        <Content>
+          <MarketplaceForm 
+            formData={formData}
+            onChange={handleFormChange}
+          />
+          
+          <MarketplacePreview 
+            formData={formData}
+          />
+        </Content>
       </Main>
       
       <Footer>
         <FooterContent>
-          Atlassian Marketplace Preview Builder - A tool for product marketers and developers
+          &copy; {new Date().getFullYear()} Atlassian Marketplace App Builder
         </FooterContent>
       </Footer>
       
-      <SaveListingModal 
+      <SaveListingModal
         isOpen={isSaveModalOpen}
         onClose={handleSaveModalClose}
         onSave={handleSaveListing}
-        listingName={formData.appName}
       />
       
       <ConfirmationDialog
@@ -410,8 +431,14 @@ function App() {
         title="Delete Listing"
         message="Are you sure you want to delete this listing? This action cannot be undone."
         confirmText="Delete"
-        cancelText="Cancel"
         destructive={true}
+      />
+      
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={handleAuthModalClose}
+        onLogin={handleLogin}
+        onRegister={handleRegister}
       />
       
       {notification && (

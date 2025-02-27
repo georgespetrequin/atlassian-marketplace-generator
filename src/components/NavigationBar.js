@@ -145,6 +145,33 @@ const EmptyState = styled.div`
   font-size: 14px;
 `;
 
+const SaveButton = styled.button`
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+`;
+
+const DropdownHeader = styled.div`
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px 16px;
+  color: #172B4D;
+`;
+
+const DropdownDivider = styled.div`
+  height: 1px;
+  background-color: #F4F5F7;
+`;
+
 const NavigationBar = ({ 
   savedListings, 
   onSelectListing, 
@@ -154,16 +181,16 @@ const NavigationBar = ({
   user,
   onLogout
 }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+    setIsDropdownOpen(!isDropdownOpen);
   };
   
   const handleSelectListing = (listing) => {
     onSelectListing(listing);
-    setDropdownOpen(false);
+    setIsDropdownOpen(false);
   };
   
   const handleDeleteClick = (e, listingId) => {
@@ -175,7 +202,7 @@ const NavigationBar = ({
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
+        setIsDropdownOpen(false);
       }
     };
     
@@ -190,65 +217,59 @@ const NavigationBar = ({
       <NavContent>
         <Logo>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM15.88 8.29L10 14.17L8.12 12.29C7.73 11.9 7.1 11.9 6.71 12.29C6.32 12.68 6.32 13.31 6.71 13.7L9.3 16.29C9.69 16.68 10.32 16.68 10.71 16.29L17.3 9.7C17.69 9.31 17.69 8.68 17.3 8.29C16.91 7.9 16.27 7.9 15.88 8.29Z" fill="white"/>
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="white"/>
+            <path d="M2 17L12 22L22 17" fill="white"/>
+            <path d="M2 12L12 17L22 12" fill="white"/>
           </svg>
-          Atlassian Marketplace Preview Builder
+          Atlassian Marketplace App Builder
         </Logo>
         
-        {user ? (
-          <>
-            <NavLinks>
-              <UserInfo>
-                <UserEmail>{user.email}</UserEmail>
-                <LogoutButton onClick={onLogout}>Log Out</LogoutButton>
-              </UserInfo>
+        <NavLinks>
+          <StartNewButton onClick={onStartNewListing}>
+            Start New Listing
+          </StartNewButton>
+          
+          <SaveButton onClick={onSaveCurrentListing}>
+            Save Listing
+          </SaveButton>
+          
+          {user ? (
+            <NavLink ref={dropdownRef}>
+              <DropdownButton onClick={toggleDropdown}>
+                {user.email}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </DropdownButton>
               
-              <StartNewButton onClick={onStartNewListing}>
-                Start New Listing
-              </StartNewButton>
-              
-              <NavLink onClick={onSaveCurrentListing}>
-                Save Current Listing
-              </NavLink>
-              
-              <NavLink ref={dropdownRef}>
-                <DropdownButton onClick={toggleDropdown}>
-                  Saved Listings
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 6L8 10L12 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </DropdownButton>
-                
-                <DropdownMenu isOpen={dropdownOpen}>
-                  {savedListings.length > 0 ? (
-                    savedListings.map((listing) => (
-                      <DropdownItem 
-                        key={listing.id} 
-                        onClick={() => handleSelectListing(listing)}
-                      >
-                        <span>{listing.listingName || listing.appName || 'Unnamed Listing'}</span>
-                        <DeleteButton 
-                          onClick={(e) => handleDeleteClick(e, listing.id)}
-                          title="Delete listing"
-                        >
+              <DropdownMenu isOpen={isDropdownOpen}>
+                {savedListings && savedListings.length > 0 ? (
+                  <>
+                    <DropdownHeader>Your Saved Listings</DropdownHeader>
+                    {savedListings.map(listing => (
+                      <DropdownItem key={listing.id} onClick={() => handleSelectListing(listing)}>
+                        {listing.listingName}
+                        <DeleteButton onClick={(e) => handleDeleteClick(e, listing.id)}>
                           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/>
+                            <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="currentColor"/>
                           </svg>
                         </DeleteButton>
                       </DropdownItem>
-                    ))
-                  ) : (
-                    <EmptyState>No saved listings yet</EmptyState>
-                  )}
-                </DropdownMenu>
-              </NavLink>
-            </NavLinks>
-          </>
-        ) : (
-          <div>
-            {/* No navigation links shown when user is not logged in */}
-          </div>
-        )}
+                    ))}
+                  </>
+                ) : (
+                  <DropdownItem>No saved listings</DropdownItem>
+                )}
+                
+                <DropdownDivider />
+                
+                <DropdownItem onClick={onLogout}>
+                  Log Out
+                </DropdownItem>
+              </DropdownMenu>
+            </NavLink>
+          ) : null}
+        </NavLinks>
       </NavContent>
     </NavContainer>
   );

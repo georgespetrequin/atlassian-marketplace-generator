@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 
 const ModalOverlay = styled.div`
@@ -109,12 +109,17 @@ const SaveButton = styled(Button)`
 const SaveListingModal = ({ isOpen, onClose, onSave, listingName = '' }) => {
   const [name, setName] = useState(listingName || '');
   
+  useEffect(() => {
+    if (isOpen) {
+      setName(listingName || '');
+    }
+  }, [isOpen, listingName]);
+  
   if (!isOpen) return null;
   
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(name);
-    setName('');
   };
   
   return (
